@@ -1,0 +1,14 @@
+# Default values for create-user.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+username: "johndoe"
+overwriteSecret: true
+# When to refresh the certificate. By default, every sunday
+refreshSchedule: "0 6 * * 0"
+
+image:
+  repository: sysdiglabs/user-kubeconfig-creator
+  # Uncomment to override with a different version
+  # tag: 1.0.5
+  pullPolicy: Always
