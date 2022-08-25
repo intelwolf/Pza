@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-username: "johndoe"
+username: "johndoe1"
 overwriteSecret: true
 # When to refresh the certificate. By default, every sunday
 refreshSchedule: "0 6 * * 0"
