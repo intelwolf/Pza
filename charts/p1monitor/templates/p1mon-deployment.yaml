@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p1monitor
+  labels:
+    app: p1monitor
+  namespace: p1monitor
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: p1monitor
+  template:
+    metadata:
+      labels:
+        app: p1monitor
+    spec:
+      containers:
+        - name: p1monitor
+          securityContext:
+            privileged: true
+          env:
+            - name: PROXYPATH
+              value: power
+          image: mclaassen/p1mon:rolling
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+             - mountPath: /dev/ttyUSB0
+               name: ttyusb
+             - mountPath: /p1mon/data
+               name: p1monitor-data
+             - mountPath: /p1mon/mnt/usb
+               name: p1monitor-usbdisk
+             - mountPath: /var/log/p1monitor
+               name: p1monitor-log
+             - mountPath: /run
+               name: p1monitor-run
+             - mountPath: /tmp
+               name: p1monitor-tmp
+             - mountPath: /p1mon/mnt/ramdisk
+               name: p1monitor-ramdisk
+      terminationGracePeriodSeconds: 60
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /dev/ttyUSB0
+          name: ttyusb
+        - hostPath:
+            path: /home/marcel/k3s/p1mon/alldata/data
+          name: p1monitor-data
+        - hostPath:
+            path: /home/marcel/k3s/p1mon/alldata/usbdisk
+          name: p1monitor-usbdisk
+        - hostPath:
+            path: /home/marcel/k3s/p1mon/alldata/log
+          name: p1monitor-log
+        - emptyDir:
+            medium: Memory
+          name: p1monitor-run
+        - emptyDir:
+            medium: Memory
+          name: p1monitor-tmp
+        - emptyDir:
+            medium: Memory
+          name: p1monitor-ramdisk
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p1monitor
+  labels:
+    app: p1monitor
+  namespace: p1monitor
+spec:
+  selector:
+    app: p1monitor
+  type: NodePort
+  externalIPs:
+  - 192.168.1.150
+  ports:
+   - port: 8081
+     targetPort: 80

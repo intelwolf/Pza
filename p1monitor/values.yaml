@@ -1,7 +1,0 @@
-spec:
-  template:
-    spec:
-      containers:
-      - name: p1monitor
-        securityContext:
-          runAsUser: 1000
