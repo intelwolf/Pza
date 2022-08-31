@@ -4,4 +4,4 @@ spec:
       containers:
       - name: p1monitor
         securityContext:
-          runAsUser: 1000
+          runAsUser: 1
