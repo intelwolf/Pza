@@ -1,0 +1,20 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "nginx-crashloop.fullname" . }}-flask
+  labels:
+    {{- include "nginx-crashloop.flask.labels" . | nindent 4 }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+    {{- include "nginx-crashloop.flask.selectorLabels" . | nindent 6 }}
+  template:
+    spec:
+      containers:
+        - name: flask
+          image: {{ include "nginx-crashloop.flask.image" . }}
+    metadata:
+      labels:
+      {{- include "nginx-crashloop.flask.selectorLabels" . | nindent 8 }}

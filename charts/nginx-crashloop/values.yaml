@@ -1,0 +1,9 @@
+nginx:
+  image:
+    repository: nginx
+    tag: 1.15.8
+
+flask:
+  image:
+    repository: sysdiglabs/flaskbackend
+    tag: 0.1

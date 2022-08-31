@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "nginx-crashloop.fullname" . }}-nginx
+  labels:
+    {{- include "nginx-crashloop.nginx.labels" . | nindent 4 }}
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+    {{- include "nginx-crashloop.nginx.selectorLabels" . | nindent 6 }}
+  template:
+    spec:
+      nodeSelector:
+        nginxcrash: allowed
+      containers:
+        - name: nginx
+          image: {{ include "nginx-crashloop.nginx.image" . }}
+          volumeMounts:
+          - name: "config"
+            mountPath: "/etc/nginx/nginx.conf"
+            subPath: "nginx.conf"
+      volumes:
+        - name: "config"
+          configMap:
+            name: {{ include "nginx-crashloop.fullname" . }}-nginx
+    metadata:
+      labels:
+      {{- include "nginx-crashloop.nginx.selectorLabels" . | nindent 8 }}
